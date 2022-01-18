@@ -116,7 +116,7 @@ function clicked(b){
                                     choice.die();
                                 }
                                 if(gameConfig.replay == false){
-                                    new PopupLabel{x:0,y:70,align:"left",fillStyle:"Black",text:"塗り替える駅を選んでください"};
+                                    //new PopupLabel{x:0,y:70,align:"left",fillStyle:"Black",text:"塗り替える駅を選んでください"};
                                 }
                                 nb.turn = turn;
                                 nb.turnCount = turnCount;
@@ -130,7 +130,7 @@ function clicked(b){
                                 nb.attackChance = true;
                                 return nb;
                             }else{
-                                new PopupLabel{x:0,y:70,align:"left",fillStyle:"Black",text:"塗り替えられる駅が存在しませんでした"};
+                                //new PopupLabel{x:0,y:70,align:"left",fillStyle:"Black",text:"塗り替えられる駅が存在しませんでした"};
                             }
                                 
                         }
