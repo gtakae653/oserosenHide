@@ -1,4 +1,5 @@
 "field strict";
+$main = this;
 new Lines;//路線と駅のデータ
 update();
 

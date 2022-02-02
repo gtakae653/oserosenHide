@@ -17,56 +17,13 @@ var attack;
 var lost;
 var attackChance;
 var prevPlayer;
-var message1 = "塗り替える駅を選んでください";
-var message2 = "塗り替えられる駅が存在しませんでした";
 
 function clicked(b){
-    var curHotSpring=b.stext.indexOf("温泉")>-1;
+    //var curHotSpring=b.stext.indexOf("温泉")>-1;
     var nb;
     nb = new Board{owner: Object.assign({}, owner), gameConfig,prev:this ,turnCount:turnCount};
-    if(gameConfig.replay==true){
-        new MapScroll{x:$name2Node[b.stext].x,y:$name2Node[b.stext].y,scale:$scale};
-    }
-    if(attack){//本当は奪取処理をした後に消したい(消えない)
-        attack.die();
-    }
-    
-    if(lost){
-        lost.die();
-    }
     all(Path).die();
-    
-    //温泉駅を取った次のボードで実行したい処理
-    if(attackChance){
-        if(nb.owner[b.stext] && nb.owner[b.stext].owner != turn){
-            nb.owner[b.stext].owner = turn;
-            if(gameConfig.replay == false){
-                var attackLog = new CreateFile{attackedStation:b.stext,attackedPlayer:turn,attacked:"attacked"};
-            }
-                
-            paint(b);//色の変更
-            setNextTurn(nb);//ターン変更
-                
-            $main.colorCount();
-            if(attack){
-                attack.die();
-            }
-            nb.ready=true;
-            if(onReady) onReady();
-            return nb;
-        }else{
-            if(attack){
-                attack.die();
-            }
-            nb.error = "塗り替え可能な駅ではありません";
-            nb.attackChance = true;
-            nb.ready = true;
-            if(onReady) onReady();
-            return nb;
-        }
-    }
-    
-    
+
     if(gameConfig.debug == true || gameConfig.replay == true || $main.namelengthComparison(b.text.length,diceNum)){
         nb.getStation = b.stext;//次のボードのgetStationに入れる駅の名前
         
@@ -101,47 +58,20 @@ function clicked(b){
                                     
                         }
                                 
-                        for (var b1 of all(Button)) {
+                        /*for (var b1 of all(Button)) {
                             if(nb.owner[b1.stext]){
                                 nb.paint(b1);//色の変更
                             }
-                        }
+                        }*/
                                 
                     }
                             
                     if(count == 0){
-                        if(curHotSpring){//選んだのが温泉駅だったら
-                            if(nb.enemyHasStation(turn)){
-                                if(choice){
-                                    choice.die();
-                                }
-                                if(gameConfig.replay == false){
-                                    //new PopupLabel{x:0,y:70,align:"left",fillStyle:"Black",text:"塗り替える駅を選んでください"};
-                                }
-                                nb.turn = turn;
-                                nb.turnCount = turnCount;
-                                nb.ready = true;
-                                if(onReady) onReady();
-                                nb.selected = b.stext;
-                                prevMyStation[turn-1] = b.stext;
-                                nb.prevMyStation = prevMyStation;
-                                $main.colorCount();
-                                nb.prevPlayer = turn;
-                                nb.attackChance = true;
-                                return nb;
-                            }else{
-                                //new PopupLabel{x:0,y:70,align:"left",fillStyle:"Black",text:"塗り替えられる駅が存在しませんでした"};
-                            }
-                                
-                        }
-                                
                         nb.selected = b.stext;
                         prevMyStation[turn-1] = b.stext;
                         nb.prevMyStation = prevMyStation;
                         $main.colorCount();
                         nb.prevPlayer = turn;
-                                
-                        paint(b);//色の変更
                         setNextTurn(nb);//ターン変更
    
                         nb.diceNum = $main.dice();
@@ -156,23 +86,11 @@ function clicked(b){
                             
                 };
             }(line);
-                    
-            paint(b);//色の変更
-                
-        }else{//すでに取られている駅を押した場合
-            nb.error = "その駅は既に取られています";
-            nb.ready=true;
-            if(onReady) onReady();
-            return nb;
+
         }
-    }else{//文字数と一致した駅が選ばれなかった場合
-        nb.error = "指定された文字数と一致した駅を選んでください";
-        nb.ready=true;
-        if(onReady) onReady();
-        return nb;
     }
+
     return nb;
-    //$rsta = residualStation();
 }
 
 
@@ -186,25 +104,3 @@ function setNextTurn(nb) {
     }
 } 
 
-function paint(b) {
-    if(owner[b.stext].owner==1){
-        b.fillStyle = new Color("red");
-    }else if(owner[b.stext].owner==2){
-        b.fillStyle = new Color("cyan");
-    }else if(owner[b.stext].owner==3){
-        b.fillStyle = new Color("yellow");
-    }else{
-        b.fillStyle = new Color("green");
-    }
-}
-
-function enemyHasStation(turn){
-    var enemyStation = false;
-    for(var b2 in owner){
-        if(owner[b2].owner != turn){
-            enemyStation = true;
-            break;
-        }
-    }
-    return enemyStation;
-}
